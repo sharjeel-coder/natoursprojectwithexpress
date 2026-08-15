@@ -3,6 +3,17 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+//defining middleware
+app.use((req, res, next) => {
+  console.log('hello from the middleware😒');
+  next();
+});
+// middleware to manipulate the request object
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
+
 //reading file at the top level and pasre into object using the JSON.parase function
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`),
@@ -11,8 +22,10 @@ const tours = JSON.parse(
 //Refactor our our code
 // GET all tours
 const getAllTours = (req, res) => {
+  console.log(req.requestTime);
   res.status(200).json({
     status: 'success',
+    requestedAt: req.requestTime,
     // if we send multiple responses than we have to use this result
     results: tours.length,
     data: {
