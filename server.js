@@ -32,6 +32,28 @@ mongoose
 //   .then(() => {
 //     console.log('DB connection successfully');
 //   });
+
+const tourSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    //if we want to pass an error message with required field then we have to pass the array
+    required: [true, 'A tour must have a name'],
+    unique: true
+  },
+  rating: {
+    type: Number,
+    default: 4.5
+  },
+  price: {
+    type: Number,
+    required: [true, 'A tour must have a price']
+  }
+});
+
+//now creating model using the schema
+
+const Tour = mongoose.model('Tour', tourSchema);
+
 const port = process.env.port || 3000;
 app.listen(port, () => {
   console.log(`app runing on port ${port}`);
